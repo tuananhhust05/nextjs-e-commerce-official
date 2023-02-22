@@ -1,4 +1,5 @@
 // import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
+import styles from './order.module.css'
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -172,7 +173,17 @@ function OrderScreen() {
       toast.error(getError(err));
     }
   }
-
+  
+  const handleFinishOrder = async ()=>{
+    try{
+      await axios.get(`/api/orders/${orderId}/finish`);
+      dispatch({ type: 'PAY_SUCCESS' });
+      dispatch({ type: 'DELIVER_SUCCESS' });
+    }
+    catch(e){
+      console.log(e)
+    }
+  }
   return (
     <Layout title={`Order ${orderId}`}>
       <h1 className="mb-4 text-xl">{`Order ${orderId}`}</h1>
@@ -191,7 +202,7 @@ function OrderScreen() {
                 {shippingAddress.country}
               </div>
               {isDelivered ? (
-                <div className="alert-success">Delivered at {deliveredAt}</div>
+                <div className="alert-success">Delivered at {deliveredAt.substring(0, 10)}</div>
               ) : (
                 <div className="alert-error">Not delivered</div>
               )}
@@ -201,7 +212,7 @@ function OrderScreen() {
               <h2 className="mb-2 text-lg">Payment Method</h2>
               <div>{paymentMethod}</div>
               {isPaid ? (
-                <div className="alert-success">Paid at {paidAt}</div>
+                <div className="alert-success">Paid at {paidAt.substring(0, 10)}</div>
               ) : (
                 <div className="alert-error">Not paid</div>
               )}
@@ -292,9 +303,19 @@ function OrderScreen() {
                 )} */}
                 {
                   session.user.isAdmin && (
-                     <div className="w-full">
-                          Finish
-                     </div>
+                    <>
+                      {
+                          ((!isPaid) && (!isDelivered)) 
+                             && 
+                          (
+                            <div 
+                                  onClick = {()=>handleFinishOrder()}
+                                  className= {`w-full ${styles.Finish_order_btn}`}>
+                                  Finish
+                            </div>
+                          )
+                      }
+                    </>
                   )
                 }
                 {session.user.isAdmin && order.isPaid && !order.isDelivered && (

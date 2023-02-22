@@ -1,11 +1,12 @@
 import axios from 'axios';
+import styles from './product.module.css'
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useReducer } from 'react';
 import { toast } from 'react-toastify';
 import Layout from '../../components/Layout';
 import { getError } from '../../utils/error';
-
+// import {url} from '../../utils/config.js'
 function reducer(state, action) {
   switch (action.type) {
     case 'FETCH_REQUEST':
@@ -65,6 +66,7 @@ export default function AdminProdcutsScreen() {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(`/api/admin/products`);
+        
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
       } catch (err) {
         dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
@@ -136,10 +138,13 @@ export default function AdminProdcutsScreen() {
                   <tr>
                     <th className="px-5 text-left">ID</th>
                     <th className="p-5 text-left">NAME</th>
+                    <th className="p-5 text-left">IMAGE</th>
                     <th className="p-5 text-left">PRICE</th>
                     <th className="p-5 text-left">CATEGORY</th>
                     <th className="p-5 text-left">COUNT</th>
                     <th className="p-5 text-left">RATING</th>
+                    <th className="p-5 text-left">COUNTRY</th>
+                    <th className="p-5 text-left">SITE</th>
                     <th className="p-5 text-left">ACTIONS</th>
                   </tr>
                 </thead>
@@ -148,10 +153,15 @@ export default function AdminProdcutsScreen() {
                     <tr key={product._id} className="border-b">
                       <td className=" p-5 ">{product._id.substring(20, 24)}</td>
                       <td className=" p-5 ">{product.name}</td>
+                      <td className=" p-5 ">
+                          <img className={styles.image_product} src={`${product.image}`} />
+                      </td>
                       <td className=" p-5 ">${product.price}</td>
                       <td className=" p-5 ">{product.category}</td>
                       <td className=" p-5 ">{product.countInStock}</td>
                       <td className=" p-5 ">{product.rating}</td>
+                      <td className=" p-5 ">{product.country}</td>
+                      <td className=" p-5 ">{product.site}</td>
                       <td className=" p-5 ">
                         <Link href={`/admin/product/${product._id}`}>
                           <a type="button" className="default-button">

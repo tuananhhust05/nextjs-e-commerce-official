@@ -1,0 +1,17 @@
+.Finish_order_btn{
+    color:white;
+    background-color:green;
+    border-radius:5px;
+    text-align:center;
+    cursor:pointer;
+    padding:5px;
+    animation:  BoxShadowButtonFinish 3s infinite;
+}
+.Finish_order_btn:hover{
+    transition:all 0.3s;
+    transform:scale(1.2)
+}
+
+@keyframes BoxShadowButtonFinish{  /*Cài keyframe cho thằng animation*/
+    50% {box-shadow: -1px 1px 30px 1px green}
+  }

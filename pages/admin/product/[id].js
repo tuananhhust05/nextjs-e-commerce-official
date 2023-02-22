@@ -68,6 +68,8 @@ export default function AdminProductEditScreen() {
         setValue('brand', data.brand);
         setValue('countInStock', data.countInStock);
         setValue('description', data.description);
+        setValue('country', data.country);
+        setValue('site', data.site);
       } catch (err) {
         dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
       }
@@ -111,6 +113,8 @@ export default function AdminProductEditScreen() {
     brand,
     countInStock,
     description,
+    country,
+    site
   }) => {
     try {
       dispatch({ type: 'UPDATE_REQUEST' });
@@ -123,6 +127,8 @@ export default function AdminProductEditScreen() {
         brand,
         countInStock,
         description,
+        country,
+        site
       });
       dispatch({ type: 'UPDATE_SUCCESS' });
       toast.success('Product updated successfully');
@@ -162,6 +168,8 @@ export default function AdminProductEditScreen() {
           ) : (
             <form
               className="mx-auto max-w-screen-md"
+              // handleSubmit is default function in useForm 
+              // submitHandler is fixed automaticly
               onSubmit={handleSubmit(submitHandler)}
             >
               <h1 className="mb-4 text-xl">{`Edit Product ${productId}`}</h1>
@@ -248,50 +256,82 @@ export default function AdminProductEditScreen() {
                 )}
               </div>
               <div className="mb-4">
-                <label htmlFor="brand">brand</label>
-                <input
-                  type="text"
-                  className="w-full"
-                  id="brand"
-                  {...register('brand', {
-                    required: 'Please enter brand',
-                  })}
-                />
-                {errors.brand && (
-                  <div className="text-red-500">{errors.brand.message}</div>
-                )}
+                    <label htmlFor="brand">brand</label>
+                    <input
+                      type="text"
+                      className="w-full"
+                      id="brand"
+                      {...register('brand', {
+                        required: 'Please enter brand',
+                      })}
+                    />
+                    {errors.brand && (
+                      <div className="text-red-500">{errors.brand.message}</div>
+                    )}
               </div>
               <div className="mb-4">
-                <label htmlFor="countInStock">countInStock</label>
-                <input
-                  type="text"
-                  className="w-full"
-                  id="countInStock"
-                  {...register('countInStock', {
-                    required: 'Please enter countInStock',
-                  })}
-                />
-                {errors.countInStock && (
-                  <div className="text-red-500">
-                    {errors.countInStock.message}
-                  </div>
-                )}
+                    <label htmlFor="countInStock">countInStock</label>
+                    <input
+                      type="text"
+                      className="w-full"
+                      id="countInStock"
+                      {...register('countInStock', {
+                        required: 'Please enter countInStock',
+                      })}
+                    />
+                    {errors.countInStock && (
+                      <div className="text-red-500">
+                        {errors.countInStock.message}
+                      </div>
+                    )}
               </div>
               <div className="mb-4">
-                <label htmlFor="countInStock">description</label>
-                <input
-                  type="text"
-                  className="w-full"
-                  id="description"
-                  {...register('description', {
-                    required: 'Please enter description',
-                  })}
-                />
-                {errors.description && (
-                  <div className="text-red-500">
-                    {errors.description.message}
-                  </div>
-                )}
+                    <label htmlFor="countInStock">description</label>
+                    <input
+                      type="text"
+                      className="w-full"
+                      id="description"
+                      {...register('description', {
+                        required: 'Please enter description',
+                      })}
+                    />
+                    {errors.description && (
+                      <div className="text-red-500">
+                        {errors.description.message}
+                      </div>
+                    )}
+              </div>
+              <div className="mb-4">
+                    <label htmlFor="countInStock">country</label>
+                    <input
+                      type="text"
+                      className="w-full"
+                      id="country"
+                      {...register('country', {
+                        required: 'Please enter country',
+                      })}
+                    />
+                    {errors.description && (
+                      <div className="text-red-500">
+                        {errors.description.message}
+                      </div>
+                    )}
+              </div>
+              <div className="mb-4">
+                    <label htmlFor="countInStock">site</label>
+                    <input
+                      type="text"
+                      className="w-full"
+                      id="site"
+                      {...register('site', {
+                        required: 'Please enter site',
+                      })}
+                    />
+                    {errors.description && (
+                      <div className="text-red-500">
+                        {errors.description.message}
+                      </div>
+                    )}
               </div>
               <div className="mb-4">
                 <button disabled={loadingUpdate} className="primary-button">

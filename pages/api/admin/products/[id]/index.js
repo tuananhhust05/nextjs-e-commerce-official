@@ -19,12 +19,14 @@ const handler = async (req, res) => {
     return res.status(400).send({ message: 'Method not allowed' });
   }
 };
+
 const getHandler = async (req, res) => {
   await db.connect();
   const product = await Product.findById(req.query.id);
   await db.disconnect();
   res.send(product);
 };
+
 const putHandler = async (req, res) => {
   await db.connect();
   const product = await Product.findById(req.query.id);
@@ -33,10 +35,13 @@ const putHandler = async (req, res) => {
     product.slug = req.body.slug;
     product.price = req.body.price;
     product.category = req.body.category;
-    product.image = req.body.image;
+    //product.image = req.body.image;
     product.brand = req.body.brand;
     product.countInStock = req.body.countInStock;
     product.description = req.body.description;
+    product.country = req.body.country || 'Viet Nam';
+    product.site = req.body.site || 'Ha Noi';
+
     await product.save();
     await db.disconnect();
     res.send({ message: 'Product updated successfully' });
@@ -45,6 +50,7 @@ const putHandler = async (req, res) => {
     res.status(404).send({ message: 'Product not found' });
   }
 };
+
 const deleteHandler = async (req, res) => {
   await db.connect();
   const product = await Product.findById(req.query.id);

@@ -10,7 +10,7 @@ import { Store } from '../utils/Store';
 import DropdownLink from './DropdownLink';
 import { useRouter } from 'next/router';
 import { SearchIcon } from '@heroicons/react/outline';
-
+import styles from './layout.module.css'
 export default function Layout({ title, children }) {
   // take data from session 
   const { status, data: session } = useSession();
@@ -53,7 +53,7 @@ export default function Layout({ title, children }) {
         <header>
           <nav className="flex h-12 items-center px-4 justify-between shadow-md">
             <Link href="/">
-              <a className="text-lg font-bold">amazona</a>
+              <a className="text-lg font-bold">TraCo</a>
             </Link>
             <form
               onSubmit={submitHandler}
@@ -136,10 +136,31 @@ export default function Layout({ title, children }) {
           </nav>
         </header>
         <main className="container m-auto mt-4 px-4">{children}</main>
-        <footer className="flex h-10 justify-center items-center shadow-inner">
-          <p>Copyright © 2022 Amazona</p>
-        </footer>
+        <div className={styles.footer}>
+            <div className={styles.container}>
+                <div className={styles.row}>
+                    <div className={styles.footeritem}>
+                        <div className={styles.text}>
+                            <h2>Address</h2>
+                            <p>Bằng liệt, Hoàng Liệt <br/>Hoàng Mai, Hà Nội </p>
+                        </div>
+                    </div>
+                    <div className={styles.footeritem}>
+                        <div className={styles.text}>
+                            <h2>Contact</h2>
+                            <p>Phone: 0339170155</p>
+                            <p> Email: tuananhhust05@gmail.com</p>
+                        </div>
+                          
+                    </div>
+                </div>
+                <hr style={{ margin:"3% 10%",width:"80%" }}/>
+                <p style={{color:"white",margin:"15px"}}>@Copyright by TraCo</p>
+            </div>
+            <img src="https://images.pexels.com/photos/2901209/pexels-photo-2901209.jpeg?auto=compress&cs=tinysrgb&w=600" alt=".." className={styles.img_background_footer}/>
+        </div>
       </div>
+
     </>
   );
 }
