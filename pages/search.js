@@ -37,11 +37,13 @@ export default function Search(props) {
     brand = 'all',
     price = 'all',
     rating = 'all',
+    site = 'all',
+    country ='all',
     sort = 'featured',
     page = 1,
   } = router.query;
 
-  const { products, countProducts, categories, brands, pages } = props;
+  const { products, countProducts, categories, brands, pages, sites, countries } = props;
 
   const filterSearch = ({
     page,
@@ -53,6 +55,8 @@ export default function Search(props) {
     searchQuery,
     price,
     rating,
+    site,
+    country
   }) => {
     const { query } = router;
     if (page) query.page = page;
@@ -62,6 +66,8 @@ export default function Search(props) {
     if (brand) query.brand = brand;
     if (price) query.price = price;
     if (rating) query.rating = rating;
+    if (site) query.site = site;
+    if (country) query.country = country;
     if (min) query.min ? query.min : query.min === 0 ? 0 : min;
     if (max) query.max ? query.max : query.max === 0 ? 0 : max;
 
@@ -88,7 +94,15 @@ export default function Search(props) {
   const ratingHandler = (e) => {
     filterSearch({ rating: e.target.value });
   };
+  
+  const siteHandler = (e) => {
+    console.log("Changed",e.target.value);
+    filterSearch({ site: e.target.value });
+  };
 
+  const countryHandler = (e) => {
+    filterSearch({ country: e.target.value });
+  };
   const { state, dispatch } = useContext(Store);
   const addToCartHandler = async (product) => {
     const existItem = state.cart.cartItems.find((x) => x._id === product._id);
@@ -101,6 +115,13 @@ export default function Search(props) {
     dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity } });
     router.push('/cart');
   };
+
+  const handleRefreshSearch = ()=>{
+    router.push({
+      pathname: router.pathname,
+      query: {},
+    });
+  }
   return (
     <Layout title="search">
       <div className="grid md:grid-cols-4 md:gap-5">
@@ -157,6 +178,33 @@ export default function Search(props) {
                 ))}
             </select>
           </div>
+          <div className="mb-3">
+            <h2>Country</h2>
+            <select className="w-full" value={country} onChange={countryHandler}>
+              <option value="all">All</option>
+              {countries &&
+                countries.map((country) => (
+                  <option key={country} value={country}>
+                    {country}
+                  </option>
+                ))}
+            </select>
+          </div>
+          <div className="mb-3">
+            <h2>Site</h2>
+            <select className="w-full" value={site} onChange={siteHandler}>
+              <option value="all">All</option>
+              {sites &&
+                sites.map((site) => (
+                  <option key={site} value={site}>
+                    {site}
+                  </option>
+                ))}
+            </select>
+          </div>
+          <button className="mb-3" onClick={()=> handleRefreshSearch()}>
+               Refresh
+          </button>
         </div>
         <div className="md:col-span-3">
           <div className="mb-2 flex items-center justify-between border-b-2 pb-2">
@@ -228,6 +276,8 @@ export async function getServerSideProps({ query }) {
   const brand = query.brand || '';
   const price = query.price || '';
   const rating = query.rating || '';
+  const site = query.site || '';
+  const country = query.country || '';
   const sort = query.sort || '';
   const searchQuery = query.query || '';
 
@@ -242,6 +292,8 @@ export async function getServerSideProps({ query }) {
       : {};
   const categoryFilter = category && category !== 'all' ? { category } : {};
   const brandFilter = brand && brand !== 'all' ? { brand } : {};
+  const siteFilter = site && site !== 'all' ? { site } : {};
+  const countryFilter = country && country !== 'all' ? { country } : {};
   const ratingFilter =
     rating && rating !== 'all'
       ? {
@@ -276,6 +328,9 @@ export async function getServerSideProps({ query }) {
   await db.connect();
   const categories = await Product.find().distinct('category');
   const brands = await Product.find().distinct('brand');
+  const sites = await Product.find().distinct('site');
+  const countries = await Product.find().distinct('country');
+
   const productDocs = await Product.find(
     {
       ...queryFilter,
@@ -283,6 +338,8 @@ export async function getServerSideProps({ query }) {
       ...priceFilter,
       ...brandFilter,
       ...ratingFilter,
+      ...siteFilter,
+      ...countryFilter,
     },
     '-reviews'
   )
@@ -297,6 +354,8 @@ export async function getServerSideProps({ query }) {
     ...priceFilter,
     ...brandFilter,
     ...ratingFilter,
+    ...siteFilter,
+    ...countryFilter,
   });
 
   await db.disconnect();
@@ -310,6 +369,8 @@ export async function getServerSideProps({ query }) {
       pages: Math.ceil(countProducts / pageSize),
       categories,
       brands,
+      sites, 
+      countries
     },
   };
 }

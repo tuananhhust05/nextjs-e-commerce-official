@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import Layout from '../../../components/Layout';
 import { getError } from '../../../utils/error';
+import { useDropzone } from "react-dropzone"
 
 function reducer(state, action) {
   switch (action.type) {
@@ -79,30 +80,32 @@ export default function AdminProductEditScreen() {
   }, [productId, setValue]);
 
   const router = useRouter();
-
-  const uploadHandler = async (e, imageField = 'image') => {
-    const url = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`;
-    try {
-      dispatch({ type: 'UPLOAD_REQUEST' });
-      const {
-        data: { signature, timestamp },
-      } = await axios('/api/admin/cloudinary-sign');
-
-      const file = e.target.files[0];
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('signature', signature);
-      formData.append('timestamp', timestamp);
-      formData.append('api_key', process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY);
-      const { data } = await axios.post(url, formData);
-      dispatch({ type: 'UPLOAD_SUCCESS' });
-      setValue(imageField, data.secure_url);
-      toast.success('File uploaded successfully');
-    } catch (err) {
-      dispatch({ type: 'UPLOAD_FAIL', payload: getError(err) });
-      toast.error(getError(err));
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop: (accceptedFiles)=>{
+        const formData = new FormData();
+        const listType = ["img","jpg","jpeg","png","gif","tiff"]
+        const config = {
+            header: { 'Content-Type': 'multipart/form-data' }
+        }
+        accceptedFiles.forEach(pic => {
+          let type = String(pic.path).split(".")[String(pic.path).split(".").length-1].toLowerCase();
+          if(listType.find((e)=> e == type)){
+            formData.append("files",pic);
+          }
+        });
+        axios.post(`https://api-booking-app-aws-ec2.onrender.com/api/hotels/UpLoadFile`, formData, config)
+        .then(async (response) => {
+          if (response && response.data && response.data.data) {
+            dispatch({ type: 'UPLOAD_SUCCESS' });
+            setValue('image', response.data.data[0]);
+            toast.success('File uploaded successfully');
+          }
+        }).catch((e)=>{
+          dispatch({ type: 'UPLOAD_FAIL', payload: getError(e) });
+          toast.error(getError(e));
+        })
     }
-  };
+  }); 
 
   const submitHandler = async ({
     name,
@@ -231,13 +234,15 @@ export default function AdminProductEditScreen() {
                 )}
               </div>
               <div className="mb-4">
-                <label htmlFor="imageFile">Upload image</label>
-                <input
-                  type="file"
-                  className="w-full"
-                  id="imageFile"
-                  onChange={uploadHandler}
-                />
+                  <div 
+                        {...getRootProps({ className: "small_dropzone" })}
+                        className="upload_file">
+                          <input className="small_dropzone" {...getInputProps()} />
+                          {/* <FileUploadIcon/> */}
+                          <div className="decription_btn">
+                              Upload Image
+                          </div>
+                  </div>
 
                 {loadingUpload && <div>Uploading....</div>}
               </div>
