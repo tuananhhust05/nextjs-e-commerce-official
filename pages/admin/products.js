@@ -154,7 +154,7 @@ export default function AdminProdcutsScreen() {
                       <td className=" p-5 ">{product._id.substring(20, 24)}</td>
                       <td className=" p-5 ">{product.name}</td>
                       <td className=" p-5 ">
-                          <img className={styles.image_product} src={`${product.image}`} />
+                          <img alt="" className={styles.image_product} src={`${product.image}`} />
                       </td>
                       <td className=" p-5 ">${product.price}</td>
                       <td className=" p-5 ">{product.category}</td>

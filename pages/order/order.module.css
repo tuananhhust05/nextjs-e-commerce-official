@@ -1,3 +1,4 @@
+.Finish_order_payment_btn,
 .Finish_order_btn{
     color:white;
     background-color:green;
@@ -6,8 +7,15 @@
     cursor:pointer;
     padding:5px;
     animation:  BoxShadowButtonFinish 3s infinite;
+    margin: 10px 0px;
 }
+
 .Finish_order_btn:hover{
+    transition:all 0.3s;
+    transform:scale(1.2)
+}
+
+.Finish_order_payment_btn:hover{
     transition:all 0.3s;
     transform:scale(1.2)
 }

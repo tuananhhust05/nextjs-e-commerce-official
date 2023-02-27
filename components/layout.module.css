@@ -18,6 +18,15 @@
 .container{
     margin:auto;
 }
+.option_header{
+    display:flex;
+}
+.search_btn{
+    margin: 10px 5px;
+}
+.profile_btn{
+    margin: 8px 0px;
+}
 /*row cả container dùng xuyên suốt cho các section sau*/
 .row{
     display: flex;/* cùng hàng*/

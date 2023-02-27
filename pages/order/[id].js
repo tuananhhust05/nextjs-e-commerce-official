@@ -176,12 +176,22 @@ function OrderScreen() {
   
   const handleFinishOrder = async ()=>{
     try{
-      await axios.get(`/api/orders/${orderId}/finish`);
+      await axios.get(`/api/orders/${orderId}/finish`).catch((e)=>{console.log("Error finishing order",e)});
       dispatch({ type: 'PAY_SUCCESS' });
       dispatch({ type: 'DELIVER_SUCCESS' });
     }
     catch(e){
-      console.log(e)
+      console.log(e);
+    }
+  }
+
+  const handleFinishOrderPayment = async ()=>{
+    try{ 
+        await axios.get(`/api/orders/${orderId}/finishpayment`).catch((e)=>{console.log("Error finishing payment",e)});
+        dispatch({ type: 'PAY_SUCCESS' });
+    }
+    catch(e){
+        console.log(e, "erro finish payment")
     }
   }
   return (
@@ -305,14 +315,26 @@ function OrderScreen() {
                   session.user.isAdmin && (
                     <>
                       {
-                          ((!isPaid) && (!isDelivered)) 
+                          ((!isDelivered) || (!isPaid))
                              && 
                           (
-                            <div 
-                                  onClick = {()=>handleFinishOrder()}
-                                  className= {`w-full ${styles.Finish_order_btn}`}>
-                                  Finish
-                            </div>
+                            <> 
+                                {
+                                   (!isPaid) && (
+                                      <div 
+                                          onClick = {()=>handleFinishOrderPayment()}
+                                          className= {`w-full ${styles.Finish_order_payment_btn}`}>
+                                          Finish Payment
+                                      </div>
+                                   )
+                                } 
+                                <div 
+                                    onClick = {()=>handleFinishOrder()}
+                                    className= {`w-full ${styles.Finish_order_btn}`}>
+                                    Finish 
+                               </div>
+                            </>
+                            
                           )
                       }
                     </>

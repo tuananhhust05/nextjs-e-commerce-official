@@ -8,7 +8,7 @@ import { XCircleIcon } from '@heroicons/react/outline';
 import ProductItem from '../components/ProductItem';
 import Product from '../models/Product';
 import db from '../utils/db';
-
+import styles from './search.module.css'
 const PAGE_SIZE = 2;
 
 const prices = [
@@ -247,7 +247,7 @@ export default function Search(props) {
                 />
               ))}
             </div>
-            <ul className="flex">
+            <ul className={`flex ${styles.listPageCount}`}>
               {products.length > 0 &&
                 [...Array(pages).keys()].map((pageNumber) => (
                   <li key={pageNumber}>
