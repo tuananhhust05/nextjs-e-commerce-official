@@ -33,7 +33,11 @@
     flex-wrap:wrap;
     overflow: hidden;
 }
-
+.count_product{
+    position:absolute;
+    right:0px;
+    top:0px;
+}
 /*footer*/
 .footer{
    overflow:hidden;
